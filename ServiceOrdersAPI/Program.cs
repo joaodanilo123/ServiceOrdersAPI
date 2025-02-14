@@ -1,4 +1,8 @@
 
+using ServiceOrderManagement.Infrastructure.Extensions;
+using ServiceOrdersManagement.Infrastructure.Configurations;
+using System.Text.Json.Serialization;
+
 namespace ServiceOrdersAPI
 {
     public class Program
@@ -7,14 +11,26 @@ namespace ServiceOrdersAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddControllers().AddJsonOptions(opts =>
+            {
+                var enumConverter = new JsonStringEnumConverter();
+                opts.JsonSerializerOptions.Converters.Add(enumConverter);
+            });
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options => SwaggerGenCustomOptions.MountSwaggerGenOptions(options));
+
+            builder.Services
+                .AddApplicationServices()
+                .AddInfrastructureServices(builder.Configuration)
+                .AddJwtAuthentication(builder.Configuration);
+
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -25,12 +41,13 @@ namespace ServiceOrdersAPI
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
             app.Run();
         }
+
     }
 }

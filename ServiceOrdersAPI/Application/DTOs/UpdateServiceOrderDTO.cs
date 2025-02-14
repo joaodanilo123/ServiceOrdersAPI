@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ServiceOrderManagement.Domain.Enums;
 using ServiceOrdersManagement.Domain.Enums;
 
 namespace ServiceOrderManagement.Application.DTOs

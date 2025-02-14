@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ServiceOrderManagement.Application.DTOs;
 using ServiceOrderManagement.Application.Interfaces;
 using ServiceOrdersManagement.Application.DTOs;
@@ -19,6 +20,7 @@ namespace ServiceOrderManagement.API.Controllers
 
         // POST: api/ServiceOrders
         [HttpPost]
+        //[Authorize]
         public async Task<IActionResult> Create([FromBody] CreateServiceOrderDTO dto)
         {
             if (!ModelState.IsValid)
@@ -30,6 +32,7 @@ namespace ServiceOrderManagement.API.Controllers
 
         // GET: api/ServiceOrders
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] OrderStatus? status, [FromQuery] string clientName)
         {
             var orders = await _serviceOrderService.GetAllServiceOrdersAsync(status, clientName);
@@ -38,6 +41,7 @@ namespace ServiceOrderManagement.API.Controllers
 
         // GET: api/ServiceOrders/{id}
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById(int id)
         {
             var order = await _serviceOrderService.GetServiceOrderByIdAsync(id);
@@ -49,6 +53,7 @@ namespace ServiceOrderManagement.API.Controllers
 
         // PUT: api/ServiceOrders/{id}
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateServiceOrderDTO dto)
         {
             if (!ModelState.IsValid)
@@ -67,6 +72,7 @@ namespace ServiceOrderManagement.API.Controllers
 
         // DELETE: api/ServiceOrders/{id}
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             try
